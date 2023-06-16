@@ -6,4 +6,5 @@ return [
     'feed_date_format'  => 'The date format to use',
     'feed_num_items'    => 'Number of items that should be fetched',
     'feed_items_per_page'   => 'Number of items per page',
+    'feed_cache_duration' => 30,
 ];

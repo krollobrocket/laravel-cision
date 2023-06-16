@@ -39,6 +39,18 @@ class CisionService
         return $it;
     }
 
+    public function createPagination(Collection &$content): string
+    {
+        $page = \request()->query->get('p', 1) - 1;
+        $pagination = '<div class="pagination"><ul>';
+        $num_pages = (int) ceil(count($content) / \config('cision.feed_items_per_page', 1));
+        $content = $content->slice($page * \config('cision.feed_items_per_page'), \config('cision.feed_items_per_page'));
+        for ($i = 0; $i < $num_pages; $i++) {
+            $pagination .= '<li><a href="?p=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+        }
+        return $pagination . '</ul></div>';
+    }
+
     public function fetchFeed()
     {
         $content = Cache::get(self::CACHE_NEWS_KEY);
@@ -53,7 +65,7 @@ class CisionService
             ])->getBody()
                 ->getContents());
             $content = Collection::make(array_map([$this, 'mapFeedItem'], $content->Releases ?: []));
-            Cache::put(self::CACHE_NEWS_KEY, $content, 30);
+            Cache::put(self::CACHE_NEWS_KEY, $content, \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION));
         }
         return $content;
     }

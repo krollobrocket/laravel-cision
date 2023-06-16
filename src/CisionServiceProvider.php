@@ -2,6 +2,7 @@
 
 namespace Cyclonecode\Cision;
 
+use Cyclonecode\Cision\Commands\FetchFeed;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -32,15 +33,33 @@ class CisionServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                FetchFeed::class,
+            ]);
+        }
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'cision');
         View::composer('cision::cision_feed', function () {
+            /** @var \Cyclonecode\Cision\CisionService $service */
+            $service = \App::make(CisionService::class);
+            $content = $service->fetchFeed();
+            $pagination = null;
+            if (\config('cision.feed_items_per_page')) {
+                $pagination = $service->createPagination($content);
+            }
             View::share(
-                'content', \App::make(CisionService::class)->fetchFeed()
+                'content', $content
+            );
+            View::share(
+                'pagination', $pagination
             );
             View::share('settings', \config('cision'));
         });
         $this->publishes([
             __DIR__.'/../config/cision.php' => config_path('cision.php'),
         ]);
+        $this->publishes([
+            __DIR__.'/../resources/css' => public_path('vendor/cision'),
+        ], 'public');
     }
 }
