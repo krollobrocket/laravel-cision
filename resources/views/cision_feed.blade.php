@@ -1,13 +1,14 @@
 @props([
     'content',
+    'settings',
 ])
 @foreach ($content as $item)
     <div class="">
         <h2>{{ $item->Title }}</h2>
-        <span>{{ date('m/d/Y', strtotime($item->PublishDate)) }}</span>
+        <span>{{ date($settings['feed_date_format'], strtotime($item->PublishDate)) }}</span>
         {{ $item->Intro }}
-        @if (count($item->Images) > 0)
-            <img src="{{ $item->Images[0]->DownloadUrl }}" alt="{{ $item->Images[0]->Title }}" />
+        @if (isset($item->Image))
+            <img src="{{ $item->Image->Url }}" alt="{{ $item->Image->Title }}" />
         @endif
     </div>
 @endforeach

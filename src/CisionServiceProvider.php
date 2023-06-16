@@ -3,6 +3,7 @@
 namespace Cyclonecode\Cision;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class CisionServiceProvider extends ServiceProvider
@@ -15,7 +16,12 @@ class CisionServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(CisionService::class, function () {
-            return new CisionService(new Client());
+            return new CisionService(new Client([
+                'headers' => [
+                    'Content-type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+            ]));
         });
     }
 
@@ -27,10 +33,12 @@ class CisionServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'cision');
-        $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/cision'),
-        ]);
-        // view('vendor.cision.cision_feed')->share('content', app(CisionService::class)->fetchFeed());
+        View::composer('cision::cision_feed', function () {
+            View::share(
+                'content', \App::make(CisionService::class)->fetchFeed()
+            );
+            View::share('settings', \config('cision'));
+        });
         $this->publishes([
             __DIR__.'/../config/cision.php' => config_path('cision.php'),
         ]);
