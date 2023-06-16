@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\Cache;
 class CisionService
 {
     const CISION_NEWS_ENDPOINT = 'https://publish.ne.cision.com/papi/NewsFeed/';
+    const CISION_ARTICLE_ENDPOINT = 'http://publish.ne.cision.com/papi/Release/';
     const DEFAULT_CACHE_DURATION = 30 * 5;
     const CACHE_NEWS_KEY = 'cision_news';
+    const CACHE_ARTICLE_KEY = 'cision_article';
     const DEFAULT_NUM_ITEMS = 50;
 
     public function __construct(private Client $client)
@@ -49,6 +51,20 @@ class CisionService
             $pagination .= '<li><a href="?p=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
         }
         return $pagination . '</ul></div>';
+    }
+
+    public function fetchArticle(string $id)
+    {
+        $content = Cache::get(self::CACHE_ARTICLE_KEY . $id);
+        if (!$content) {
+            $content = \json_decode($this->client->get(self::CISION_ARTICLE_ENDPOINT . $id, [
+                'query' => [
+                ]
+            ])->getBody()
+                ->getContents());
+            Cache::put(self::CACHE_ARTICLE_KEY . $id, $this->mapFeedItem($content->Release), \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION));
+        }
+        return $content;
     }
 
     public function fetchFeed()

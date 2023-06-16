@@ -38,8 +38,18 @@ class CisionServiceProvider extends ServiceProvider
                 FetchFeed::class,
             ]);
         }
+        $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'cision');
-        View::composer('cision::cision_feed', function () {
+        View::composer('cision::article', function ($id) {
+            $parsed = explode('/', parse_url(\request()->getUri())['path']);
+            $id = end($parsed);
+            /** @var \Cyclonecode\Cision\CisionService $service */
+            $service = \App::make(CisionService::class);
+            $content = $service->fetchArticle($id);
+            View::share('content', $content);
+            echo $content->Title;
+        });
+        View::composer('cision::feed', function () {
             /** @var \Cyclonecode\Cision\CisionService $service */
             $service = \App::make(CisionService::class);
             $content = $service->fetchFeed();
