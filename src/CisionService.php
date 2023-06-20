@@ -18,19 +18,22 @@ class CisionService
 
     public function __construct(private Client $client)
     {
+        $this->scheduleCommand();
     }
 
     protected function scheduleCommand()
     {
         $schedule = new Schedule();
-        $schedule->command('analytics:report')
-            ->daily()
-            ->runInBackground();
+        $schedule->command('cision-feed:fetch')
+            // ->cron('*****')
+            ->everyMinute();
+            // ->withoutOverlapping()
+            // ->runInBackground();
     }
 
     protected function mapFeedItem($it)
     {
-        if (isset($it->Images) && \config('cision.feed_image_style')) {
+        if (!empty($it->Images) && \config('cision.feed_image_style')) {
             $it->Image = (object) [
                 'Title' => $it->Images[0]->Title,
                 'Description' => '',
@@ -38,6 +41,7 @@ class CisionService
             ];
             unset($it->Images);
         }
+        $it->Title = \strip_tags($it->Title);
         return $it;
     }
 

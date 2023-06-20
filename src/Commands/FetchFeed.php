@@ -18,6 +18,7 @@ class FetchFeed extends Command
     public function handle()
     {
         // Fetch the entire feed
-        dd('hello');
+        $content = @file_get_contents('/Users/krister/dev/ubuntu/data/laravel-cision/cision/test.txt');
+        file_put_contents('/Users/krister/dev/ubuntu/data/laravel-cision/cision/test.txt', $content . time() . PHP_EOL);
     }
 }

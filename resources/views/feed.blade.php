@@ -13,7 +13,7 @@
         @if (isset($item->Image))
             <img src="{{ $item->Image->Url }}" alt="{{ $item->Image->Title }}" />
         @endif
-        <a href="{{ $item->EncryptedId }}">Readmore</a>
+        <a href="{{ $settings['feed_base_slug'] }}/{{ $item->EncryptedId }}">Readmore</a>
     </div>
 @endforeach
     {!! $pagination !!}
