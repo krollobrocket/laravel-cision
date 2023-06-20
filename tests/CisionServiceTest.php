@@ -1,9 +1,11 @@
 <?php
 
+use Cyclonecode\Cision\CisionService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase;
 
 class CisionServiceTest extends TestCase
@@ -27,84 +29,93 @@ class CisionServiceTest extends TestCase
 
     public function testCreateEmptyPagination()
     {
-        \App::bind(\Cyclonecode\Cision\CisionService::class, function ($app) {
-            $mock = new MockHandler([new Response(200, [], '{}')]);
+        \App::bind(CisionService::class, function ($app) {
+            $content = file_get_contents(__DIR__ . '/press-feed.json');
+            $mock = new MockHandler([new Response(200, [], \json_encode(\json_decode($content)->Releases[0]))]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,
             ]);
-            return new \Cyclonecode\Cision\CisionService($client);
+            return new CisionService($client);
         });
-        /** @var \Cyclonecode\Cision\CisionService $service */
-        $service = \App::make(\Cyclonecode\Cision\CisionService::class);
+        /** @var CisionService $service */
+        $service = \App::make(CisionService::class);
         $content = $service->fetchFeed();
-        $pagination = $service->createPagination($content);
-        $this->assertNotNull($pagination);
-        $this->assertEmpty($pagination);
+        $this->assertNotNull($content->pagination);
+        $this->assertEmpty($content->pagination);
     }
 
     public function testCreatePagination()
     {
         \config(['cision.feed_items_per_page' => 1]);
-        \App::bind(\Cyclonecode\Cision\CisionService::class, function ($app) {
-            $mock = new MockHandler([new Response(200, [], '{"Releases":[{"Title":"bar"},{"Title":"foo"}]}')]);
+        \App::bind(CisionService::class, function ($app) {
+            $content = file_get_contents(__DIR__ . '/press-feed.json');
+            $mock = new MockHandler([new Response(200, [], $content)]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,
             ]);
-            return new \Cyclonecode\Cision\CisionService($client);
+            return new CisionService($client);
         });
-        /** @var \Cyclonecode\Cision\CisionService $service */
-        $service = \App::make(\Cyclonecode\Cision\CisionService::class);
+        /** @var CisionService $service */
+        $service = \App::make(CisionService::class);
         $content = $service->fetchFeed();
-        $pagination = $service->createPagination($content);
-        $this->assertNotNull($pagination);
-        $this->assertNotEmpty($pagination);
-    }
-
-    public function testMapFeedItem()
-    {
-        /** @var \Cyclonecode\Cision\CisionService $service */
-        $service = \App::make(\Cyclonecode\Cision\CisionService::class);
-        $item = new \stdClass();
-        $item->Title = 'foo';
-        $item->Images = [];
-        $item->Images[0] = new \stdClass();
-        $item->Images[0]->Title = 'foo';
-        $item->Images[0]->DownloadUrl = 'https://example.jpg';
-        $item = $this->invokeMethod($service, 'mapFeedItem', [$item]);
-        $this->assertIsObject($item);
-        $this->assertObjectHasAttribute('Image', $item);
+        $this->assertNotNull($content->pagination);
+        $this->assertNotEmpty($content->pagination);
     }
 
     public function testFetchFeed()
     {
-        \App::bind(\Cyclonecode\Cision\CisionService::class, function ($app) {
-            $mock = new MockHandler([new Response(200, [], '{}')]);
+        \App::bind(CisionService::class, function ($app) {
+            $content = file_get_contents(__DIR__ . '/press-feed.json');
+            $mock = new MockHandler([new Response(200, [], $content)]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,
             ]);
-            return new \Cyclonecode\Cision\CisionService($client);
+            return new CisionService($client);
         });
-        /** @var \Cyclonecode\Cision\CisionService $service */
-        $service = \App::make(\Cyclonecode\Cision\CisionService::class);
+        /** @var CisionService $service */
+        $service = \App::make(CisionService::class);
         $feed = $service->fetchFeed();
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $feed);
+        $this->assertIsObject($feed);
+        $this->assertInstanceOf(Collection::class, $feed->content);
+        $this->assertIsString($feed->pagination);
+    }
+
+    public function testFetchEmptyFeed()
+    {
+        \App::bind(CisionService::class, function ($app) {
+            $mock = new MockHandler([new Response(200, [], '')]);
+            $handler = HandlerStack::create($mock);
+            $client = new Client([
+                'handler' => $handler,
+            ]);
+            return new CisionService($client);
+        });
+        /** @var CisionService $service */
+        $service = \App::make(CisionService::class);
+        $feed = $service->fetchFeed();
+        $this->assertIsObject($feed);
+        $this->assertInstanceOf(Collection::class, $feed->content);
+        $this->assertEmpty($feed->content);
+        $this->assertIsString($feed->pagination);
+        $this->assertEmpty($feed->pagination);
     }
 
     public function testFetchArticle()
     {
-        \App::bind(\Cyclonecode\Cision\CisionService::class, function ($app) {
-            $mock = new MockHandler([new Response(200, [], '{"Release":{"Title":"bar"}}')]);
+        \App::bind(CisionService::class, function ($app) {
+            $content = file_get_contents(__DIR__ . '/press-feed.json');
+            $mock = new MockHandler([new Response(200, [], \json_encode(\json_decode($content)->Releases[0]))]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,
             ]);
-            return new \Cyclonecode\Cision\CisionService($client);
+            return new CisionService($client);
         });
-        /** @var \Cyclonecode\Cision\CisionService $service */
-        $service = \App::make(\Cyclonecode\Cision\CisionService::class);
+        /** @var CisionService $service */
+        $service = \App::make(CisionService::class);
         $post = $service->fetchArticle('foobar');
         $this->assertIsObject($post);
     }

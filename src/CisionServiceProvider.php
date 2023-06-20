@@ -2,10 +2,20 @@
 
 namespace Cyclonecode\Cision;
 
+use CisionBlockPro\Cision\Feed;
 use Cyclonecode\Cision\Commands\FetchFeed;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Collection;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class CisionServiceProvider extends ServiceProvider
 {
@@ -23,6 +33,32 @@ class CisionServiceProvider extends ServiceProvider
                     'Accept' => 'application/json',
                 ],
             ]));
+        });
+        $this->app->singleton('CisionSerializer', function () {
+            $phpDocExtractor = new PhpDocExtractor();
+            $reflectionExtractor = new ReflectionExtractor();
+
+            $propertyInfoExtractor = new PropertyInfoExtractor(
+                [$reflectionExtractor],
+                [$phpDocExtractor, $reflectionExtractor],
+                [], //[$phpDocExtractor],
+                [], //[$reflectionExtractor],
+                [], //[$reflectionExtractor]
+            );
+
+            $encoders = [new JsonEncoder()];
+            $normalizers = [
+                new ObjectNormalizer(
+                    null,
+                    null,
+                    null,
+                    $propertyInfoExtractor
+                ),
+                new ArrayDenormalizer(),
+            ];
+
+            $serializer = new Serializer($normalizers, $encoders);
+            return $serializer;
         });
     }
 
@@ -47,25 +83,21 @@ class CisionServiceProvider extends ServiceProvider
             $service = \App::make(CisionService::class);
             $content = $service->fetchArticle($id);
             View::share('content', $content);
-            echo $content->Title;
         });
         View::composer('cision::feed', function () {
             /** @var \Cyclonecode\Cision\CisionService $service */
             $service = \App::make(CisionService::class);
             $content = $service->fetchFeed();
-            $pagination = null;
-            if (\config('cision.feed_items_per_page')) {
-                $pagination = $service->createPagination($content);
-            }
             View::share(
                 'content',
-                $content
+                $content->content
             );
             View::share(
                 'pagination',
-                $pagination
+                $content->pagination
             );
             View::share('settings', \config('cision'));
+            View::share('config', new FeedSettings());
         });
         $this->publishes([
             __DIR__ . '/../config/cision.php' => config_path('cision.php'),
