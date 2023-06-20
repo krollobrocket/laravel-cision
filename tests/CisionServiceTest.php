@@ -47,7 +47,7 @@ class CisionServiceTest extends TestCase
     {
         \config(['cision.feed_items_per_page' => 1]);
         \App::bind(\Cyclonecode\Cision\CisionService::class, function ($app) {
-            $mock = new MockHandler([new Response(200, [], '{"Releases":[{"foo":"bar"},{"bar":"foo"}]}')]);
+            $mock = new MockHandler([new Response(200, [], '{"Releases":[{"Title":"bar"},{"Title":"foo"}]}')]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,
@@ -67,6 +67,7 @@ class CisionServiceTest extends TestCase
         /** @var \Cyclonecode\Cision\CisionService $service */
         $service = \App::make(\Cyclonecode\Cision\CisionService::class);
         $item = new \stdClass();
+        $item->Title = 'foo';
         $item->Images = [];
         $item->Images[0] = new \stdClass();
         $item->Images[0]->Title = 'foo';
@@ -95,7 +96,7 @@ class CisionServiceTest extends TestCase
     public function testFetchArticle()
     {
         \App::bind(\Cyclonecode\Cision\CisionService::class, function ($app) {
-            $mock = new MockHandler([new Response(200, [], '{"Release":{"foo":"bar"}}')]);
+            $mock = new MockHandler([new Response(200, [], '{"Release":{"Title":"bar"}}')]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,
