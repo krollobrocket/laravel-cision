@@ -7,6 +7,7 @@ use Cyclonecode\Cision\Traits\Serialize;
 class FeedItem
 {
     use Serialize;
+
     private string $HtmlBody;
     private string $HtmlCompanyInformation;
     private string $HtmlContact;
@@ -47,7 +48,9 @@ class FeedItem
     private string $CisionWireUrl;
     private string $RawHtmlUrl;
     private array $LanguageVersions;
-    /** @var FeedImage[] */
+    /**
+     * @var FeedImage[]
+     */
     private array $Images;
     private array $Tickers;
 
@@ -65,7 +68,7 @@ class FeedItem
     public function setHtmlBody(string $HtmlBody): void
     {
         $HtmlBody = \strip_tags($HtmlBody, ['p','b','i','br', 'em', 'ul', 'li', 'ol', 'table', 'strong']);
-        $HtmlBody = preg_replace('/ style=("|\')(.*?)("|\')/','', $HtmlBody);
+        $HtmlBody = preg_replace('/ style=("|\')(.*?)("|\')/', '', $HtmlBody);
         $this->HtmlBody = $HtmlBody;
     }
 

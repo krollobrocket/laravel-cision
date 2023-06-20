@@ -13,7 +13,7 @@ trait Serialize
     }
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return Serialize|FeedImage|FeedItem
      */
     public static function fromArray(array $data = []): self
@@ -23,7 +23,7 @@ trait Serialize
     }
 
     /**
-     * @param string $data
+     * @param  string $data
      * @return Serialize|FeedImage|FeedItem
      */
     public static function fromJson(string $data): self

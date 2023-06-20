@@ -106,8 +106,8 @@ class CisionServiceTest extends TestCase
     public function testFetchArticle()
     {
         \App::bind(CisionService::class, function ($app) {
-            $content = file_get_contents(__DIR__ . '/press-feed.json');
-            $mock = new MockHandler([new Response(200, [], \json_encode(\json_decode($content)->Releases[0]))]);
+            $content = file_get_contents(__DIR__ . '/article.json');
+            $mock = new MockHandler([new Response(200, [], $content)]);
             $handler = HandlerStack::create($mock);
             $client = new Client([
                 'handler' => $handler,

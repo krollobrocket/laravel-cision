@@ -61,14 +61,20 @@ class CisionService
         $content = Cache::get(self::CACHE_ARTICLE_KEY . $id);
         if (!$content) {
             try {
-                $content = \json_decode($this->client->get(self::CISION_ARTICLE_ENDPOINT . $id, [
-                    'query' => [
-                        'Format' => 'json',
-                    ]
-                ])->getBody()
-                    ->getContents());
+                $content = \json_decode(
+                    $this->client->get(
+                        self::CISION_ARTICLE_ENDPOINT . $id,
+                        [
+                            'query' => [
+                                'Format' => 'json',
+                            ]
+                        ]
+                    )->getBody()
+                        ->getContents()
+                );
                 $content = FeedItem::fromObject($content->Release);
             } catch (\Exception $exception) {
+                dd($exception);
                 \abort($exception->getCode());
             }
             Cache::put(
@@ -87,15 +93,20 @@ class CisionService
         $content = Cache::get($cacheKey);
         if (!$content) {
             try {
-                $content = \json_decode($this->client->get(self::CISION_NEWS_ENDPOINT . config('cision.feed_id'), [
-                    'query' => [
-                        'DetailLevel' => 'detail',
-                        'PageIndex' => 1,
-                        'PageSize' => \config('cision.feed_num_items', self::DEFAULT_NUM_ITEMS),
-                        'Format' => 'json',
-                    ]
-                ])->getBody()
-                    ->getContents());
+                $content = \json_decode(
+                    $this->client->get(
+                        self::CISION_NEWS_ENDPOINT . config('cision.feed_id'),
+                        [
+                            'query' => [
+                                'DetailLevel' => 'detail',
+                                'PageIndex' => 1,
+                                'PageSize' => \config('cision.feed_num_items', self::DEFAULT_NUM_ITEMS),
+                                'Format' => 'json',
+                            ]
+                        ]
+                    )->getBody()
+                        ->getContents()
+                );
             } catch (\Exception $exception) {
             }
             $items = $content->Releases ?? [];
