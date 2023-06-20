@@ -38,7 +38,7 @@ class CisionServiceProvider extends ServiceProvider
                 FetchFeed::class,
             ]);
         }
-        $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/cision.php');
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'cision');
         View::composer('cision::article', function ($id) {
             $parsed = explode('/', parse_url(\request()->getUri())['path']);

@@ -30,7 +30,7 @@ class CisionService
 
     protected function mapFeedItem($it)
     {
-        if ($it->Images && \config('cision.feed_image_style')) {
+        if (isset($it->Images) && \config('cision.feed_image_style')) {
             $it->Image = (object) [
                 'Title' => $it->Images[0]->Title,
                 'Description' => '',
@@ -43,14 +43,21 @@ class CisionService
 
     public function createPagination(Collection &$content): string
     {
+        $pagination = '';
         $page = \request()->query->get('p', 1) - 1;
-        $pagination = '<div class="pagination"><ul>';
-        $num_pages = (int) ceil(count($content) / \config('cision.feed_items_per_page', 1));
-        $content = $content->slice($page * \config('cision.feed_items_per_page'), \config('cision.feed_items_per_page'));
-        for ($i = 0; $i < $num_pages; $i++) {
-            $pagination .= '<li><a href="?p=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+        $items_per_page = \config('cision.feed_items_per_page', 0);
+        if ($items_per_page) {
+            $num_pages = (int)ceil(count($content) / $items_per_page);
+            if ($num_pages > 1) {
+                $pagination = '<div class="pagination"><ul>';
+                $content = $content->slice($page * \config('cision.feed_items_per_page'), \config('cision.feed_items_per_page'));
+                for ($i = 0; $i < $num_pages; $i++) {
+                    $pagination .= '<li><a href="?p=' . ($i + 1) . '">' . ($i + 1) . '</a></li>';
+                }
+                $pagination .= '</ul></div>';
+            }
         }
-        return $pagination . '</ul></div>';
+        return $pagination;
     }
 
     public function fetchArticle(string $id)
@@ -62,7 +69,8 @@ class CisionService
                 ]
             ])->getBody()
                 ->getContents());
-            Cache::put(self::CACHE_ARTICLE_KEY . $id, $this->mapFeedItem($content->Release), \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION));
+            $content = $this->mapFeedItem($content->Release ?? $content);
+            Cache::put(self::CACHE_ARTICLE_KEY . $id, $content, \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION));
         }
         return $content;
     }
@@ -71,16 +79,19 @@ class CisionService
     {
         $content = Cache::get(self::CACHE_NEWS_KEY);
         if (!$content) {
-            $content = \json_decode($this->client->get(self::CISION_NEWS_ENDPOINT . config('cision.feed_id'), [
-                'query' => [
-                    'DetailLevel' => 'detail',
-                    'PageIndex' => 1,
-                    'PageSize' => \config('cision.feed_num_items', self::DEFAULT_NUM_ITEMS),
-                    'Format' => 'json',
-                ]
-            ])->getBody()
-                ->getContents());
-            $content = Collection::make(array_map([$this, 'mapFeedItem'], $content->Releases ?: []));
+            try {
+                $content = \json_decode($this->client->get(self::CISION_NEWS_ENDPOINT . config('cision.feed_id'), [
+                    'query' => [
+                        'DetailLevel' => 'detail',
+                        'PageIndex' => 1,
+                        'PageSize' => \config('cision.feed_num_items', self::DEFAULT_NUM_ITEMS),
+                        'Format' => 'json',
+                    ]
+                ])->getBody()
+                    ->getContents());
+            } catch (\Exception $exception) {
+            }
+            $content = Collection::make(array_map([$this, 'mapFeedItem'], $content->Releases ?? []));
             Cache::put(self::CACHE_NEWS_KEY, $content, \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION));
         }
         return $content;

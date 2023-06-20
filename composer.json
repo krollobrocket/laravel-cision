@@ -21,7 +21,7 @@
     "guzzlehttp/guzzle": "^7.0.1"
   },
   "require-dev": {
-    "orchestra/testbench": "^6.0"
+    "orchestra/testbench": "^7.25"
   },
   "autoload": {
     "psr-4": {
@@ -32,6 +32,9 @@
     "psr-4": {
       "Cyclonecode\\Cision\\Tests\\": "tests"
     }
+  },
+  "scripts": {
+      "test": "php ./vendor/bin/phpunit tests"
   },
   "extra": {
     "laravel": {
