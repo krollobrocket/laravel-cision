@@ -39,7 +39,7 @@ class CisionServiceProvider extends ServiceProvider
             ]);
         }
         $this->loadRoutesFrom(__DIR__ . '/../routes/cision.php');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'cision');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'cision');
         View::composer('cision::article', function ($id) {
             $parsed = explode('/', parse_url(\request()->getUri())['path']);
             $id = end($parsed);
@@ -58,18 +58,20 @@ class CisionServiceProvider extends ServiceProvider
                 $pagination = $service->createPagination($content);
             }
             View::share(
-                'content', $content
+                'content',
+                $content
             );
             View::share(
-                'pagination', $pagination
+                'pagination',
+                $pagination
             );
             View::share('settings', \config('cision'));
         });
         $this->publishes([
-            __DIR__.'/../config/cision.php' => config_path('cision.php'),
+            __DIR__ . '/../config/cision.php' => config_path('cision.php'),
         ]);
         $this->publishes([
-            __DIR__.'/../resources/css' => public_path('vendor/cision'),
+            __DIR__ . '/../resources/css' => public_path('vendor/cision'),
         ], 'public');
     }
 }

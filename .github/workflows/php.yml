@@ -45,8 +45,8 @@ jobs:
       - name: Run Unit test suite
         run: ./vendor/bin/phpunit tests
 
-      #- name: Run Codesniffer
-      #  run: ./vendor/bin/phpcs --standard=PSR2 --extensions=php -n --ignore=*/vendor/* ./src
+      - name: Run Codesniffer
+        run: ./vendor/bin/phpcs --standard=PSR12 --extensions=php -n ./src
 
       #- name: Run Codesniffer For PHP ${{ matrix.php-versions }}
       #  run: ./vendor/bin/phpcs --standard=PHPCompatibility --extensions=php -n --ignore=*/vendor/* --runtime-set testVersion ${{ matrix.php-versions }} ./src
