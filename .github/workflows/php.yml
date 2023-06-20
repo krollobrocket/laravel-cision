@@ -1,0 +1,55 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    # runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        # operating-system: [ ubuntu-latest, windows-latest, macOS-latest ]
+        php-versions: [ '8.0', '8.1' ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: nanasess/setup-php@v3
+        with:
+          php-version: ${{ matrix.php-versions }}
+          # extensions: intl #optional
+          # ini-values: "post_max_size=256M" #optional
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: ./vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run Unit test suite
+        run: ./vendor/bin/phpunit
+
+      #- name: Run Codesniffer
+      #  run: ./vendor/bin/phpcs --standard=PSR2 --extensions=php -n --ignore=*/vendor/* ./src
+
+      #- name: Run Codesniffer For PHP ${{ matrix.php-versions }}
+      #  run: ./vendor/bin/phpcs --standard=PHPCompatibility --extensions=php -n --ignore=*/vendor/* --runtime-set testVersion ${{ matrix.php-versions }} ./src
+
+      #- name: Run PHPStan
+      #  run: ./vendor/bin/phpstan analyze -c phpstan.neon
