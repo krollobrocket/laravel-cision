@@ -7,4 +7,5 @@ return [
     'feed_num_items'    => 50,
     'feed_items_per_page'   => 0,
     'feed_cache_duration' => 0,
+    'feed_base_slug'    => 'cision',
 ];

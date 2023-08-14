@@ -11,7 +11,7 @@
     <div class="item">
         <h2>{{ $item->getTitle() }}</h2>
         <span>{{ $item->getPublishDate()->format($config->getDateFormat()) }}</span>
-        {{ $item->getIntro() }}
+        {!! $item->getHtmlIntro() !!}
         @if ($item->getImages() && $config->getImageStyle())
             <img src="{{ $item->getImages()[0]->{ "get" . $config->getImageStyle() }() }}" alt="{{ $item->getImages()[0]->getTitle() }}" />
         @endif

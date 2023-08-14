@@ -10,9 +10,11 @@ Fetches and exposes news from Cision in Laravel.
     'feed_num_items'    => 'Number of items that should be fetched',
     'feed_items_per_page'   => 'Number of items per page',
     'feed_cache_duration' => 30,
+    'feed_base_slug'    => 'The base slug to use for the news feed',
 
 ## Installation
 
     composer require cyclonecode/cision
-    @php artisan vendor:publish --provider=cyclonecode/cision
-    
+    php artisan vendor:publish
+    # Now you can add your own configuration to the config/cision.php file.
+    # Then go to route configured by 'feed_base_slug' to view your news feed.

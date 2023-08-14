@@ -149,6 +149,8 @@ class FeedItem
      */
     public function setHtmlIntro(string $HtmlIntro): void
     {
+        $HtmlIntro = \strip_tags($HtmlIntro, ['p', 'b', 'i', 'br', 'em', 'ul', 'li', 'ol', 'table', 'strong']);
+        $HtmlIntro = preg_replace('/ style=("|\')(.*?)("|\')/', '', $HtmlIntro);
         $this->HtmlIntro = $HtmlIntro;
     }
 
