@@ -3,8 +3,6 @@ name: PHP Composer
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -13,15 +11,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    # runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        # operating-system: [ ubuntu-latest, windows-latest, macOS-latest ]
         php-versions: [ '8.0', '8.1', '8.2' ]
 
     steps:
       - uses: actions/checkout@v3
-      - uses: nanasess/setup-php@v3
+      - uses: nanasess/setup-php@v4
         with:
           php-version: ${{ matrix.php-versions }}
           # extensions: intl #optional

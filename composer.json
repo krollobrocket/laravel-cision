@@ -41,7 +41,8 @@
   },
   "scripts": {
       "test": "php ./vendor/bin/phpunit tests",
-      "phpcs": "php ./vendor/bin/phpcs --standard=PSR12 src"
+      "phpcs": "php ./vendor/bin/phpcs --standard=PSR12 src",
+      "fix": "php ./vendor/bin/php-cs-fixer fix"
   },
   "extra": {
     "laravel": {
