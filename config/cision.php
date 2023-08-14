@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'feed_id'           => 'Cision Feed Id',
-    'feed_image_style'  => 'The style to use for images',
-    'feed_date_format'  => 'The date format to use',
-    'feed_num_items'    => 'Number of items that should be fetched',
-    'feed_items_per_page'   => 'Number of items per page',
-    'feed_cache_duration' => 30,
+    'feed_id'           => 'A275C0BF733048FFAE9126ACA64DD08F',
+    'feed_image_style'  => 'UrlTo400x400ArResized',
+    'feed_date_format'  => 'Y-m-d',
+    'feed_num_items'    => 50,
+    'feed_items_per_page'   => 0,
+    'feed_cache_duration' => 0,
 ];

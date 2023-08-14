@@ -15,7 +15,7 @@
         @if ($item->getImages() && $config->getImageStyle())
             <img src="{{ $item->getImages()[0]->{ "get" . $config->getImageStyle() }() }}" alt="{{ $item->getImages()[0]->getTitle() }}" />
         @endif
-        <a href="{{ $config->getBaseSlug() }}/{{ $item->getEncryptedId() }}">Readmore</a>
+        <a href="{{ $config->getBaseSlug() }}/{{ $item->getEncryptedId() }}">Read more</a>
     </div>
 @endforeach
     {!! $pagination !!}

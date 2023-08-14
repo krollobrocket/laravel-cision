@@ -1,5 +1,18 @@
 .cision-feed .item {
-
+    display: block;
+    position: relative;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+.cision-feed .item img {
+    display: block;
+    margin: 10px auto;
+}
+.cision-feed .item a {
+    position: absolute;
+    right: 0;
+    display: block;
+    text-decoration: none;
 }
 .cision-feed .pagination ul {
     list-style: none;
