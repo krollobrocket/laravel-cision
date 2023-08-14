@@ -4,7 +4,7 @@ namespace Cyclonecode\Cision;
 
 use Cyclonecode\Cision\Traits\Serialize;
 
-class FeedItem
+class FeedItem implements \JsonSerializable
 {
     use Serialize;
 
@@ -728,5 +728,10 @@ class FeedItem
     public function setTickers(array $Tickers): void
     {
         $this->Tickers = $Tickers;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return get_object_vars($this);
     }
 }

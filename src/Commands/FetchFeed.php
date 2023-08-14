@@ -2,6 +2,7 @@
 
 namespace Cyclonecode\Cision\Commands;
 
+use Cyclonecode\Cision\CisionService;
 use Illuminate\Console\Command;
 
 class FetchFeed extends Command
@@ -18,7 +19,20 @@ class FetchFeed extends Command
     public function handle()
     {
         // Fetch the entire feed
-        $content = @file_get_contents('/Users/krister/dev/ubuntu/data/laravel-cision/cision/test.txt');
-        file_put_contents('/Users/krister/dev/ubuntu/data/laravel-cision/cision/test.txt', $content . time() . PHP_EOL);
+        /** @var CisionService $service */
+        $service = \App::make(CisionService::class);
+        $feed = $service->fetchFeed();
+        $items = \json_decode(\json_encode($feed->content), JSON_OBJECT_AS_ARRAY);
+        $items = array_map(function ($item) {
+            return [
+                'Id' => $item['Id'],
+                'Title' => $item['Title'],
+                'EncryptedId' => $item['EncryptedId'],
+            ];
+        }, $items);
+        $this->table(
+            ['Id', 'Title', 'EncryptedId'],
+            $items,
+        );
     }
 }

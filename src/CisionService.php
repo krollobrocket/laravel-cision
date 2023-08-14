@@ -90,7 +90,6 @@ class CisionService
 
     public function fetchFeed()
     {
-        // config(['cision.feed_cache_duration' => 10]);
         $cacheKey = md5(self::CACHE_NEWS_KEY . \request()->getQueryString());
         $content = Cache::get($cacheKey);
         if (!$content) {
