@@ -2,6 +2,7 @@
 
 namespace Cyclonecode\Cision;
 
+use Cyclonecode\Cision\FeedItem;
 use GuzzleHttp\Client;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
@@ -23,6 +24,9 @@ class CisionService
         $this->scheduleCommand();
     }
 
+    /**
+     * @return void
+     */
     protected function scheduleCommand()
     {
         $schedule = new Schedule();
@@ -33,6 +37,10 @@ class CisionService
         // ->runInBackground();
     }
 
+    /**
+     * @param FeedItem[] $items
+     * @return string
+     */
     public function createPagination(array &$items): string
     {
         $pagination = '';
@@ -57,6 +65,10 @@ class CisionService
         return $pagination;
     }
 
+    /**
+     * @param string $id
+     * @return mixed|null
+     */
     public function fetchArticle(string $id)
     {
         $content = Cache::get(self::CACHE_ARTICLE_KEY . $id);
@@ -75,7 +87,6 @@ class CisionService
                 );
                 $content = FeedItem::fromObject($content->Release);
             } catch (\Exception $exception) {
-                dd($exception);
                 \abort($exception->getCode());
             }
             Cache::put(
@@ -88,6 +99,9 @@ class CisionService
         return $content;
     }
 
+    /**
+     * @return \stdClass
+     */
     public function fetchFeed()
     {
         $cacheKey = md5(self::CACHE_NEWS_KEY . \request()->getQueryString());

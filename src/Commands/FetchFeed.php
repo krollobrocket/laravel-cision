@@ -23,13 +23,11 @@ class FetchFeed extends Command
         $service = \App::make(CisionService::class);
         $feed = $service->fetchFeed();
         $items = \json_decode(\json_encode($feed->content), JSON_OBJECT_AS_ARRAY);
-        $items = array_map(function ($item) {
-            return [
-                'Id' => $item['Id'],
-                'Title' => $item['Title'],
-                'EncryptedId' => $item['EncryptedId'],
-            ];
-        }, $items);
+        $items = array_map(fn ($item) => [
+            'Id' => $item['Id'],
+            'Title' => $item['Title'],
+            'EncryptedId' => $item['EncryptedId'],
+        ], $items);
         $this->table(
             ['Id', 'Title', 'EncryptedId'],
             $items,
