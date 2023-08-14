@@ -14,6 +14,17 @@ Fetches and exposes news from Cision in Laravel.
 
 ## Installation
 
+First add the repository in your `composer.json` file:
+
+    "repositories": [
+        {
+            "url": "https://github.com/krollobrocket/laravel-cision.git",
+            "type": "git"
+        }
+    ],
+
+Then require and publish the package:
+
     composer require cyclonecode/cision
     php artisan vendor:publish
     # Now you can add your own configuration to the config/cision.php file.
