@@ -67,7 +67,7 @@ class FeedItem
      */
     public function setHtmlBody(string $HtmlBody): void
     {
-        $HtmlBody = \strip_tags($HtmlBody, ['p','b','i','br', 'em', 'ul', 'li', 'ol', 'table', 'strong']);
+        $HtmlBody = \strip_tags($HtmlBody, ['p', 'b', 'i', 'br', 'em', 'ul', 'li', 'ol', 'table', 'strong']);
         $HtmlBody = preg_replace('/ style=("|\')(.*?)("|\')/', '', $HtmlBody);
         $this->HtmlBody = $HtmlBody;
     }

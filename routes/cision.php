@@ -7,5 +7,5 @@ Route::get('/' . \config('cision.feed_base_slug', 'cision'), function () {
 });
 
 Route::get('/' . \config('cision.feed_base_slug', 'cision') . '/{news}', function ($id) {
-   return view('cision::article');
+    return view('cision::article');
 });

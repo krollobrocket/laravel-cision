@@ -36,6 +36,7 @@ class CisionServiceTest extends TestCase
             $client = new Client([
                 'handler' => $handler,
             ]);
+
             return new CisionService($client);
         });
         /** @var CisionService $service */
@@ -55,6 +56,7 @@ class CisionServiceTest extends TestCase
             $client = new Client([
                 'handler' => $handler,
             ]);
+
             return new CisionService($client);
         });
         /** @var CisionService $service */
@@ -73,6 +75,7 @@ class CisionServiceTest extends TestCase
             $client = new Client([
                 'handler' => $handler,
             ]);
+
             return new CisionService($client);
         });
         /** @var CisionService $service */
@@ -91,6 +94,7 @@ class CisionServiceTest extends TestCase
             $client = new Client([
                 'handler' => $handler,
             ]);
+
             return new CisionService($client);
         });
         /** @var CisionService $service */
@@ -112,6 +116,7 @@ class CisionServiceTest extends TestCase
             $client = new Client([
                 'handler' => $handler,
             ]);
+
             return new CisionService($client);
         });
         /** @var CisionService $service */
@@ -134,6 +139,7 @@ class CisionServiceTest extends TestCase
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);
+
         return $method->invokeArgs($object, $parameters);
     }
 }

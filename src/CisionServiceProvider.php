@@ -64,6 +64,7 @@ class CisionServiceProvider extends ServiceProvider
                 ];
 
                 $serializer = new Serializer($normalizers, $encoders);
+
                 return $serializer;
             }
         );
@@ -91,8 +92,8 @@ class CisionServiceProvider extends ServiceProvider
                 $parsed = explode('/', parse_url(\request()->getUri())['path']);
                 $id = end($parsed);
                 /**
-            * @var \Cyclonecode\Cision\CisionService $service
-            */
+                 * @var \Cyclonecode\Cision\CisionService $service
+                 */
                 $service = \App::make(CisionService::class);
                 $content = $service->fetchArticle($id);
                 View::share('content', $content);
@@ -102,8 +103,8 @@ class CisionServiceProvider extends ServiceProvider
             'cision::feed',
             function () {
                 /**
-            * @var \Cyclonecode\Cision\CisionService $service
-            */
+                 * @var \Cyclonecode\Cision\CisionService $service
+                 */
                 $service = \App::make(CisionService::class);
                 $content = $service->fetchFeed();
                 View::share(

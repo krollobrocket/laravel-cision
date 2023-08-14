@@ -29,8 +29,8 @@ class CisionService
         $schedule->command('cision-feed:fetch')
             // ->cron('*****')
             ->everyMinute();
-            // ->withoutOverlapping()
-            // ->runInBackground();
+        // ->withoutOverlapping()
+        // ->runInBackground();
     }
 
     public function createPagination(array &$items): string
@@ -39,7 +39,7 @@ class CisionService
         $page = \request()->query->get('p', 1) - 1;
         $items_per_page = \config('cision.feed_items_per_page', 0);
         if ($items_per_page) {
-            $num_pages = (int)ceil(count($items) / $items_per_page);
+            $num_pages = (int) ceil(count($items) / $items_per_page);
             if ($num_pages > 1) {
                 $pagination = '<div class="pagination"><ul>';
                 $items = array_slice(
@@ -53,6 +53,7 @@ class CisionService
                 $pagination .= '</ul></div>';
             }
         }
+
         return $pagination;
     }
 
@@ -67,7 +68,7 @@ class CisionService
                         [
                             'query' => [
                                 'Format' => 'json',
-                            ]
+                            ],
                         ]
                     )->getBody()
                         ->getContents()
@@ -83,6 +84,7 @@ class CisionService
                 \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION)
             );
         }
+
         return $content;
     }
 
@@ -102,7 +104,7 @@ class CisionService
                                 'PageIndex' => 1,
                                 'PageSize' => \config('cision.feed_num_items', self::DEFAULT_NUM_ITEMS),
                                 'Format' => 'json',
-                            ]
+                            ],
                         ]
                     )->getBody()
                         ->getContents()
@@ -122,6 +124,7 @@ class CisionService
                 \config('cision.feed_cache_duration', self::DEFAULT_CACHE_DURATION)
             );
         }
+
         return $content;
     }
 }

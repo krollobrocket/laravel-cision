@@ -19,6 +19,7 @@ trait Serialize
     public static function fromArray(array $data = []): self
     {
         $data = collect($data);
+
         return self::fromJson($data->toJson());
     }
 
@@ -36,6 +37,7 @@ trait Serialize
     public static function arrayFromJson(string $data): array
     {
         $class = get_called_class();
+
         return \App::make('CisionSerializer')->deserialize($data, $class . '[]', 'json');
     }
 }
