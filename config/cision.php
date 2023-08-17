@@ -15,7 +15,7 @@ function validateImageStyle(string $style)
 
 return [
     'feed_id'           => env('CISION_FEED_ID', 'A275C0BF733048FFAE9126ACA64DD08F'),
-    'feed_news_types'   => explode(',', trim(strtoupper(env('CISION_FEED_NEWS_TYPES', 'KMK, RDV, PRM, RPT, INB, NBR')))),
+    'feed_news_types'   => explode(',', str_replace(' ', '', strtoupper(env('CISION_FEED_NEWS_TYPES', 'KMK, RDV, PRM, RPT, INB, NBR')))),
     'feed_image_style'  => validateImageStyle(env('CISION_FEED_IMAGE_STYLE', 'UrlTo400x400ArResized')),
     'feed_date_format'  => env('CISION_FEED_DATE_FORMAT', 'Y-m-d'),
     'feed_num_items'    => env('CISION_FEED_NUM_ITEMS', 50),
