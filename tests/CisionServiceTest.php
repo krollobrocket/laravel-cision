@@ -17,6 +17,7 @@ class CisionServiceTest extends TestCase
             'cision.feed_id' => 'A275C0BF733048FFAE9126ACA64DD08F',
             'cision.feed_cache_duration' => 0,
             'cision.feed_image_style' => 'DownloadUrl',
+            'cision.feed_news_types' => ['PRM', 'KMK'],
         ]);
     }
 
