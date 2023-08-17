@@ -117,6 +117,11 @@ class CisionService
                                 'PageIndex' => 1,
                                 'PageSize' => \config('cision.feed_num_items', self::DEFAULT_NUM_ITEMS),
                                 'Format' => 'json',
+                                'Tags' => '',
+                                'StartDate' => '',
+                                'EndDate' => '',
+                                'Regulatory' => '',
+                                'SearchTerm' => '',
                             ],
                         ]
                     )->getBody()
@@ -125,6 +130,8 @@ class CisionService
             } catch (\Exception $exception) {
             }
             $items = $content->Releases ?? [];
+            // Filter out items based on selected news types.
+            $items = array_filter($items, fn ($item) => in_array($item->InformationType, \config('cision.feed_news_types')));
             $this->pagination = $this->createPagination($items);
             $content = Collection::make(Item::arrayFromJson(\json_encode($items)));
             $cache = new \stdClass();
