@@ -3,6 +3,7 @@
 namespace Cyclonecode\Cision;
 
 use Cyclonecode\Cision\Commands\FetchFeed;
+use Cyclonecode\Cision\Feed\Settings;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -116,7 +117,7 @@ class CisionServiceProvider extends ServiceProvider
                     $content->pagination
                 );
                 View::share('settings', \config('cision'));
-                View::share('config', new FeedSettings());
+                View::share('config', new Settings());
             }
         );
         $this->publishes(

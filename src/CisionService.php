@@ -2,7 +2,7 @@
 
 namespace Cyclonecode\Cision;
 
-use Cyclonecode\Cision\FeedItem;
+use Cyclonecode\Cision\Feed\Item;
 use GuzzleHttp\Client;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
@@ -38,7 +38,7 @@ class CisionService
     }
 
     /**
-     * @param FeedItem[] $items
+     * @param Item[] $items
      * @return string
      */
     public function createPagination(array &$items): string
@@ -85,7 +85,7 @@ class CisionService
                     )->getBody()
                         ->getContents()
                 );
-                $content = FeedItem::fromObject($content->Release);
+                $content = Item::fromObject($content->Release);
             } catch (\Exception $exception) {
                 \abort($exception->getCode());
             }
@@ -126,7 +126,7 @@ class CisionService
             }
             $items = $content->Releases ?? [];
             $this->pagination = $this->createPagination($items);
-            $content = Collection::make(FeedItem::arrayFromJson(\json_encode($items)));
+            $content = Collection::make(Item::arrayFromJson(\json_encode($items)));
             $cache = new \stdClass();
             $cache->content = $content;
             $cache->pagination = $this->pagination;

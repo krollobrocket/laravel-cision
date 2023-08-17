@@ -2,8 +2,8 @@
 
 namespace Cyclonecode\Cision\Traits;
 
-use Cyclonecode\Cision\FeedImage;
-use Cyclonecode\Cision\FeedItem;
+use Cyclonecode\Cision\Feed\Image;
+use Cyclonecode\Cision\Feed\Item;
 
 trait Serialize
 {
@@ -14,7 +14,7 @@ trait Serialize
 
     /**
      * @param  array $data
-     * @return Serialize|FeedImage|FeedItem
+     * @return Serialize|Image|Item|Quote
      */
     public static function fromArray(array $data = []): self
     {
@@ -25,7 +25,7 @@ trait Serialize
 
     /**
      * @param  string $data
-     * @return Serialize|FeedImage|FeedItem
+     * @return Serialize|Image|Item|Quote
      */
     public static function fromJson(string $data): self
     {

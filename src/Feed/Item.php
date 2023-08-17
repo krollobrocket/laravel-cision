@@ -1,10 +1,10 @@
 <?php
 
-namespace Cyclonecode\Cision;
+namespace Cyclonecode\Cision\Feed;
 
 use Cyclonecode\Cision\Traits\Serialize;
 
-class FeedItem implements \JsonSerializable
+class Item implements \JsonSerializable
 {
     use Serialize;
 
@@ -24,12 +24,27 @@ class FeedItem implements \JsonSerializable
     private string $CompanyInformation;
     private string $Contact;
     private string $Header;
+    /**
+     * @var string[]
+     */
     private array $Keywords;
     private array $QuickFacts;
+    /**
+     * @var Category[]
+     */
     private array $Categories;
     private array $Videos;
+    /**
+     * @var File[]
+     */
     private array $Files;
+    /**
+     * @var Quote[]
+     */
     private array $Quotes;
+    /**
+     * @var ExternalLink[]
+     */
     private array $ExternalLinks;
     private array $EmbeddedItems;
     private int $Id;
@@ -49,7 +64,7 @@ class FeedItem implements \JsonSerializable
     private string $RawHtmlUrl;
     private array $LanguageVersions;
     /**
-     * @var FeedImage[]
+     * @var Image[]
      */
     private array $Images;
     private array $Tickers;
@@ -347,7 +362,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Category[]
      */
     public function getCategories(): array
     {
@@ -355,7 +370,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @param array $Categories
+     * @param Category[] $Categories
      */
     public function setCategories(array $Categories): void
     {
@@ -379,7 +394,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return File[]
      */
     public function getFiles(): array
     {
@@ -387,7 +402,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @param array $Files
+     * @param File[] $Files
      */
     public function setFiles(array $Files): void
     {
@@ -395,7 +410,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Quote[]
      */
     public function getQuotes(): array
     {
@@ -403,7 +418,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @param array $Quotes
+     * @param Quote[] $Quotes
      */
     public function setQuotes(array $Quotes): void
     {
@@ -411,7 +426,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return ExternalLink[]
      */
     public function getExternalLinks(): array
     {
@@ -419,7 +434,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @param array $ExternalLinks
+     * @param ExternalLink[] $ExternalLinks
      */
     public function setExternalLinks(array $ExternalLinks): void
     {
@@ -699,7 +714,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Image[]
      */
     public function getImages(): array
     {
@@ -707,7 +722,7 @@ class FeedItem implements \JsonSerializable
     }
 
     /**
-     * @param array $Images
+     * @param Image[] $Images
      */
     public function setImages(array $Images): void
     {

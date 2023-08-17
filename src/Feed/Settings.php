@@ -1,8 +1,8 @@
 <?php
 
-namespace Cyclonecode\Cision;
+namespace Cyclonecode\Cision\Feed;
 
-class FeedSettings
+class Settings
 {
     private string $pagination = '';
     private int $itemsPerPage;

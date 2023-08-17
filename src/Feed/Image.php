@@ -1,10 +1,10 @@
 <?php
 
-namespace Cyclonecode\Cision;
+namespace Cyclonecode\Cision\Feed;
 
 use Cyclonecode\Cision\Traits\Serialize;
 
-class FeedImage
+class Image
 {
     use Serialize;
 
